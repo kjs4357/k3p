@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>intro</title>
+    <link rel="stylesheet" href="/intro.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=Freeman&display=swap"
+      rel="stylesheet"
+    />
+    <script src="/login.js" defer></script>
+  </head>
+  <body>
+    <nav>
+      <div class="toolbar_container" style="top: 0px">
+        <h1 class="logo">
+          <div class="logo">K3P</div>
+        </h1>
+        <div class="intro_section">
+          <a id="L1" href="#section1"><span>Introducing K3P</span></a>
+          <a id="L2" href="#section2"><span>교육 과정</span></a>
+          <a id="L3" href="#section3"><span>이용 방법</span></a>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="section active" id="section1">
+        <h1 class="title">Introducing K3P</h1>
+      </div>
+      <div class="section" id="section2">
+        <h1 class="title">교육 과정</h1>
+      </div>
+      <div class="section" id="section3">
+        <h1 class="title">이용 방법</h1>
+      </div>
+    </main>
+    <button id="start_btn">시작하기</button>
+    <script src="/intro_ani.js"></script>
+    <div id="login_modal" class="modal" style="display:flex">
+        <div class="modal_wrapper">
+          <div class="close_btn_box">
+            <button type="button" id="close_btn">&times;</button>
+          </div>
+          <div class="contents_wrapper">
+            <div class="switch_form_btn">
+              <div id="login_form_btn">
+                <button type="button" id="login_btn">
+                  <span>LOG IN</span>
+                </button>
+              </div>
+              <div id="signup_form_btn">
+                <button type="button" id="signup_btn">
+                  <span>SIGN UP</span>
+                </button>
+              </div>
+            </div>
+            <form method="post" action="/login" id="login_form">
+              <span class="form_title">아이디</span>
+              <input
+                class="input_area"
+                type="text"
+                name="userID"
+                placeholder="ID"
+              />
+              <span class="form_title">비밀번호</span>
+              <input
+                class="input_area"
+                type="password"
+                name="userPassword"
+                placeholder="Password"
+              />
+              <div id="remember_check_box">
+                <label for="remember-check">
+                  <input type="checkbox" id="remember-check" />
+                  <span>아이디 저장하기</span>
+                </label>
+              </div>
+              <hr class="myhr" />
+              <div th:if="${error}" th:text="${error}" style="color: red;" class="error-message" ></div> <!-- 에러 메시지 출력 -->
+              <input id="normal_login_btn" type="submit" value="Log in" />
+              <button type="button" id="kakao_login_btn">
+                카카오 계정으로 로그인
+              </button>
+            </form> 
+            <form method="post" action="/signup" id="signup_form" style="display: none;">
+              <span class="form_title">아이디</span>
+              <div class="input_check_div">
+                <input
+                id="userID"
+                class="input_area"
+                type="text"
+                name="userID"
+                placeholder="ID"
+                required
+              />
+              <button class="Auth_btn" type="button" onclick="checkUserID()">중복 확인</button>
+              </div>
+              <span class="form_title">비밀번호</span>
+              <input
+                id="userPassword"
+                class="input_area"
+                type="password"
+                name="userPassword"
+                placeholder="Password"
+                required
+              />
+              <span class="form_title">비밀번호 확인</span>
+              <input
+                id="confirmPassword"
+                class="input_area"
+                type="password"
+                name="confirmPassword"
+                placeholder="Password 확인"
+                required
+              />
+              <span class="form_title">e-mail</span>
+              <div class="input_check_div">
+                <input
+                class="input_area"
+                type="email"
+                name="userEmail"
+                placeholder="Email"
+                required
+              />
+              <button class="Auth_btn" type="button" onclick="checkUserEmail()">메일 인증</button>
+              </div>
+              <hr class="myhr" />
+              <input id="normal_signup_btn" type="submit" value="sign up" />
+            </form>
+        </div>
+          </div>
+        </div>
+  </body>
+</html>
