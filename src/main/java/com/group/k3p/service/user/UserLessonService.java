@@ -21,7 +21,7 @@ public class UserLessonService {
     @Autowired
     private LessonRepository lessonRepository;
 
-    public UserLesson completeLesson(Long userId, Long lessonId) {
+    public boolean completeLesson(Long userId, Long lessonId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new IllegalArgumentException("Invalid lesson ID: " + lessonId));
 
@@ -32,7 +32,13 @@ public class UserLessonService {
             userLesson.setLesson(lesson);
             userLesson.setCompleted(true);
             userLessonRepository.save(userLesson);
+            return true;
         }
-        return userLesson;
+        return userLesson.isCompleted();
+    }
+
+    public boolean isLessonCompleted(Long userId, Long lessonId) {
+        UserLesson userLesson = userLessonRepository.findByUserIdAndLessonId(userId, lessonId);
+        return userLesson != null && userLesson.isCompleted();
     }
 }
