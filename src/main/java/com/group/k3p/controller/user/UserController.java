@@ -58,7 +58,7 @@ public class UserController {
                         @RequestParam String userPassword,
                         Model model) {
         if (userService.authenticate(userID, userPassword)) {
-            return "main"; // 로그인 성공 시 리다이렉트할 페이지
+            return "redirect:/main"; // 로그인 성공 시 리디렉션
         } else {
             model.addAttribute("error", "아이디 혹은 비밀번호가 틀렸습니다.");
             return "intro";

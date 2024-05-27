@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const infoTitle = document.getElementById("info_title");
     const nextLecBtn = document.getElementById("next_lec");
     const prevLecBtn = document.getElementById("previous_lec");
-    const lec_selector = document.querySelectorAll(".lec_selector");
+    const lec_selectors = document.querySelectorAll(".lec_selector");
 
     let currentLessonIndex = 0;
     let lessons = [];
@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
             lessons = data;
             if (lessons.length > 0) {
                 updateLesson_seq(0);
+                updateLecSelectorColors(); // 페이지 로드 시 lec_selector 색상 업데이트
             }
         })
         .catch(error => console.error('Error fetching lessons:', error));
@@ -43,6 +44,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     notWatchedSpan.style.display = "block";
                     svgCheck.style.display = "none";
                 }
+
+                // lec_selector의 배경색 변경
+                lec_selectors.forEach(selector => {
+                    const selectorLessonId = selector.getAttribute('data-lesson-id');
+                    if (data.completedLessons.includes(parseInt(selectorLessonId))) {
+                        selector.style.backgroundColor = 'yellow';
+                    } else {
+                        selector.style.backgroundColor = ''; // 기본 배경색으로 초기화
+                    }
+                });
             })
             .catch(error => console.error('Error checking lesson completion:', error));
     }
@@ -63,6 +74,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     const svgCheck = document.getElementById("svg_check");
                     notWatchedSpan.style.display = "none";
                     svgCheck.style.display = "block";
+
+                    // lec_selector의 배경색 변경
+                    lec_selectors.forEach(selector => {
+                        if (selector.getAttribute('data-lesson-id') == lessonId) {
+                            selector.style.backgroundColor = 'yellow';
+                        }
+                    });
                 } else {
                     alert("수강 완료 처리에 실패했습니다.");
                 }
@@ -91,9 +109,25 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    lec_selector.forEach((button, index) => {
+    lec_selectors.forEach((button, index) => {
         button.addEventListener("click", function () {
-            updateLesson_seq(24 - index);
+            updateLesson_seq( 24 - index);
         });
     });
+
+    function updateLecSelectorColors() {
+        fetch('/api/completedLessons')
+            .then(response => response.json())
+            .then(data => {
+                lec_selectors.forEach(selector => {
+                    const selectorLessonId = selector.getAttribute('data-lesson-id');
+                    if (data.completedLessons.includes(parseInt(selectorLessonId))) {
+                        selector.style.backgroundColor = 'yellow';
+                    } else {
+                        selector.style.backgroundColor = ''; // 기본 배경색으로 초기화
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching completed lessons:', error));
+    }
 });

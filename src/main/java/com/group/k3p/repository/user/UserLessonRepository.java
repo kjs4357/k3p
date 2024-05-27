@@ -11,6 +11,8 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+@Repository
 public interface UserLessonRepository extends JpaRepository<UserLesson, Long> {
-    UserLesson findByUserIdAndLessonId(Long userId, Long lessonId);
+    UserLesson findByUserAndLesson(User user, Lesson lesson);
+    List<UserLesson> findByUser(User user);
 }

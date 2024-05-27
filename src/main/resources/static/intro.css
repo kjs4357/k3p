@@ -61,7 +61,7 @@ div.logo {
   position: fixed;
   left: 50%;
   transform: translate(-50%, 0);
-  bottom: 50px;
+  bottom: 20px;
   width: 300px;
   height: 100px;
   color: #a9d18e;
@@ -114,10 +114,10 @@ main {
 }
 .section {
   position: fixed;
-  top: 0;
+  top: 60px;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: calc(100% - 200px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -298,4 +298,19 @@ main {
   font-size: 13px;
   margin-top: 8px;
   padding-left: 3px;
+}
+.introduce-image {
+  border-radius: 20px;
+  width: 80%; /* 이미지 너비를 전체 화면의 80%로 설정 */
+  height: auto; /* 비율을 유지하며 높이를 자동으로 조정 */
+  display: block; /* 이미지를 블록 요소로 표시하여 중앙 정렬이 가능하게 함 */
+  margin: 0 auto; /* 이미지를 중앙 정렬 */
+  box-shadow:0 5px 5px rgba(0, 0, 0, 0.4);
+}
+.intro_foot{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 200px;
+  background-color: white;
 }

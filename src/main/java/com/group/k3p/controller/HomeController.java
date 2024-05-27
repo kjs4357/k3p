@@ -9,4 +9,8 @@ public class HomeController {
     public String home() {
         return "redirect:/intro.html"; // 기본 경로로 접속 시 intro.html로 리다이렉트
     }
+    @GetMapping("/main")
+    public String main() {
+        return "main"; // 기본 경로로 접속 시 intro.html로 리다이렉트
+    }
 }

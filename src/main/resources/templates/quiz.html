@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>퀴즈</title>
+    <link rel="stylesheet" />
+    <style>
+      /* 퀴즈 컨테이너 */
+      #quiz-container {
+        width: 80%; /* 원하는 너비로 조정 */
+        margin: 0 auto; /* 수평 가운데 정렬 */
+        background-color: #fff; /* 박스 배경색 설정 */
+        padding: 20px; /* 내부 여백 설정 */
+        border-radius: 5px; /* 둥근 테두리 설정 */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+        text-align: center;
+      }
+
+      /* 기본 여백과 패딩 초기화 */
+      html,
+      body,
+      div,
+      p,
+      ul,
+      ol,
+      li,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin: 0;
+        padding: 0;
+      }
+
+      /* box-sizing 설정 */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      /* 본문 스타일 */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+      }
+
+      /* 퀴즈 컨테이너 */
+      #quiz {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: left;
+        margin-bottom: 20px;
+      }
+
+      /* 질문 스타일 */
+      .question {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      /* 답변 스타일 */
+      .answer {
+        margin-bottom: 10px;
+      }
+
+      /* 컨트롤 컨테이너 */
+      .controls {
+        margin-top: 20px;
+      }
+
+      /* 버튼 스타일 */
+      .controls button {
+        padding: 10px 20px;
+        margin-right: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      /* 버튼 호버 효과 */
+      .controls button:hover {
+        background-color: #45a049;
+      }
+
+      /* 버튼 비활성화 상태 */
+      .controls button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+
+      /* 결과 컨테이너 */
+      #result {
+        font-weight: bold;
+        margin-top: 20px;
+      }
+
+      .quiz-title {
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 20px;
+      }
+      .quiz-container {
+        position: relative;
+      }
+      .quiz-title {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .slide {
+        display: none;
+        border: 1px solid #a9d18e;
+        padding: 20px;
+        margin-top: 40px;
+      }
+      .active-slide {
+        display: block;
+      }
+      #backToMain{
+        display: none;
+        padding: 10px 20px;
+        margin-right: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="quiz-container">
+      <div class="quiz-title">Quiz</div>
+      <div id="quiz"></div>
+      <div class="controls">
+        <button id="previous" style="display: none">이전</button>
+        <button id="next">다음</button>
+        <button id="submit" style="display: none">제출</button>
+      </div>
+      <div id="result"></div>
+      <button id="backToMain">퀴즈 나가기</button>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function (event) {
+        const quizData = [
+          {
+            question: "웹개발에 주로 사용되는 프론트언어는?",
+            answers: {
+              a: "일본어",
+              b: "다랑어",
+              c: "자바스크립트",
+            },
+            correct: "a",
+          },
+          {
+            question: "웹 디자인에 사용되는 언어는?",
+            answers: {
+              a: "미싱",
+              b: "css",
+              c: "돈까s",
+            },
+            correct: "a",
+          },
+          {
+            question: "3 * 3 = ?",
+            answers: {
+              a: "3",
+              b: "9",
+              c: "33",
+            },
+            correct: "a",
+          },
+          {
+            question: "웹 디자인에 사용되는 언어는?",
+            answers: {
+              a: "미싱",
+              b: "css",
+              c: "돈까s",
+            },
+            correct: "a",
+          },
+          {
+            question: "웹 디자인에 사용되는 언어는?",
+            answers: {
+              a: "미싱",
+              b: "css",
+              c: "돈까s",
+            },
+            correct: "a",
+          },
+          {
+            question: "웹개발에 주로 사용되는 프론트언어는?",
+            answers: {
+              a: "일본어",
+              b: "다랑어",
+              c: "자바스크립트",
+            },
+            correct: "a",
+          },
+          {
+            question: "웹 디자인에 사용되는 언어는?",
+            answers: {
+              a: "미싱",
+              b: "css",
+              c: "돈까s",
+            },
+            correct: "a",
+          },
+          {
+            question: "웹개발에 주로 사용되는 프론트언어는?",
+            answers: {
+              a: "일본어",
+              b: "다랑어",
+              c: "자바스크립트",
+            },
+            correct: "a",
+          },
+          {
+            question: "웹 디자인에 사용되는 언어는?",
+            answers: {
+              a: "미싱",
+              b: "css",
+              c: "돈까s",
+            },
+            correct: "a",
+          },
+          {
+            question: "웹 디자인에 사용되는 언어는?",
+            answers: {
+              a: "미싱",
+              b: "css",
+              c: "돈까s",
+            },
+            correct: "a",
+          },
+        ];
+
+        const quizDisplay = document.getElementById("quiz");
+        const submitBtn = document.getElementById("submit");
+        const previousBtn = document.getElementById("previous");
+        const nextBtn = document.getElementById("next");
+        const resultDisplay = document.getElementById("result");
+        const backToMain = document.getElementById("backToMain");
+
+        backToMain.addEventListener("click", function() {
+          window.location.href = "/backToMain";
+        });
+
+        let currentSlide = 0;
+        let slides;
+
+        function buildQuiz() {
+          let output = [];
+          quizData.forEach((currentQuestion, questionNum) => {
+            const answers = [];
+            for (let item in currentQuestion.answers) {
+              answers.push(
+                `<label>
+                                <input type="radio" name="question${questionNum}" value="${item}">
+                                ${item} : ${currentQuestion.answers[item]}
+                            </label>`
+              );
+            }
+            output.push(
+              `<div class="slide">
+                            <div class="question"> ${
+                              currentQuestion.question
+                            } </div>
+                            <div class="answer"> ${answers.join(
+                              "&nbsp;&nbsp;&nbsp;&nbsp;"
+                            )} </div>
+                        </div>`
+            );
+          });
+          quizDisplay.innerHTML = output.join("</br>");
+          slides = document.querySelectorAll(".slide");
+        }
+
+        function showResult() {
+          const answerDisplays = quizDisplay.querySelectorAll(".answer");
+          let numCorrect = 0;
+          quizData.forEach((currentQuestion, questionNum) => {
+            const answerDisplay = answerDisplays[questionNum];
+            const selector = `input[name=question${questionNum}]:checked`;
+            const userAnswer = (answerDisplay.querySelector(selector) || {})
+              .value;
+            if (userAnswer === currentQuestion.correct) {
+              numCorrect++;
+              answerDisplays[questionNum].style.color = "lightgreen";
+            } else {
+              answerDisplays[questionNum].style.color = "red";
+            }
+          });
+
+          submitBtn.style.display = "none";
+          backToMain.style.display = "inline-block";
+          resultDisplay.innerHTML = `<h3 style="color:#333;">${quizData.length}개 중에서 ${numCorrect}개 맞추셨습니다.</h3>`;
+        }
+
+        function showSlide(n) {
+          slides[currentSlide].classList.remove("active-slide");
+          slides[n].classList.add("active-slide");
+          currentSlide = n;
+          if (currentSlide === 0) {
+            previousBtn.style.display = "none";
+          } else {
+            previousBtn.style.display = "inline-block";
+          }
+          if (currentSlide === slides.length - 1) {
+            nextBtn.style.display = "none";
+            submitBtn.style.display = "inline-block";
+          } else {
+            nextBtn.style.display = "inline-block";
+            submitBtn.style.display = "none";
+          }
+        }
+
+        function showNextSlide() {
+          showSlide(currentSlide + 1);
+        }
+
+        function showPreviousSlide() {
+          showSlide(currentSlide - 1);
+        }
+
+        buildQuiz();
+        showSlide(currentSlide);
+        previousBtn.addEventListener("click", showPreviousSlide);
+        nextBtn.addEventListener("click", showNextSlide);
+        submitBtn.addEventListener("click", showResult);
+      });
+    </script>
+  </body>
+</html>

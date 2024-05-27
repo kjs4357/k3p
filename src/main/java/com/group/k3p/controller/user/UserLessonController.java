@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,19 +21,32 @@ public class UserLessonController {
     @Autowired
     private UserLessonService userLessonService;
 
-    @PostMapping("/completeLesson")
-    public Map<String, Boolean> completeLesson(@RequestBody LessonRequest request) {
-        boolean completed = userLessonService.completeLesson(1L, request.getLessonId());
-        Map<String, Boolean> response = new HashMap<>();
+    @GetMapping("/checkLessonCompleted/{lessonId}")
+    public ResponseEntity<Map<String, Object>> checkLessonCompleted(@PathVariable Long lessonId) {
+        Long userId = 1L; // 임시로 userId를 1로 고정
+        boolean completed = userLessonService.isLessonCompleted(userId, lessonId);
+        List<Long> completedLessons = userLessonService.getCompletedLessons(userId);
+        Map<String, Object> response = new HashMap<>();
         response.put("completed", completed);
-        return response;
+        response.put("completedLessons", completedLessons);
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/checkLessonCompleted/{lessonId}")
-    public Map<String, Boolean> checkLessonCompleted(@PathVariable Long lessonId) {
-        boolean completed = userLessonService.isLessonCompleted(1L, lessonId);
-        Map<String, Boolean> response = new HashMap<>();
+    @PostMapping("/completeLesson")
+    public ResponseEntity<Map<String, Object>> completeLesson(@RequestBody LessonRequest lessonRequest) {
+        Long userId = 1L; // 임시로 userId를 1로 고정
+        boolean completed = userLessonService.completeLesson(userId, lessonRequest.getLessonId());
+        Map<String, Object> response = new HashMap<>();
         response.put("completed", completed);
-        return response;
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/completedLessons")
+    public ResponseEntity<Map<String, Object>> getCompletedLessons() {
+        Long userId = 1L; // 임시로 userId를 1로 고정
+        List<Long> completedLessons = userLessonService.getCompletedLessons(userId);
+        Map<String, Object> response = new HashMap<>();
+        response.put("completedLessons", completedLessons);
+        return ResponseEntity.ok(response);
     }
 }

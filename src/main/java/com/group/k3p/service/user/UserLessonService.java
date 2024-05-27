@@ -9,6 +9,9 @@ import com.group.k3p.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserLessonService {
 
@@ -25,20 +28,29 @@ public class UserLessonService {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
         Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new IllegalArgumentException("Invalid lesson ID: " + lessonId));
 
-        UserLesson userLesson = userLessonRepository.findByUserIdAndLessonId(userId, lessonId);
+        UserLesson userLesson = userLessonRepository.findByUserAndLesson(user, lesson);
         if (userLesson == null) {
-            userLesson = new UserLesson();
-            userLesson.setUser(user);
-            userLesson.setLesson(lesson);
-            userLesson.setCompleted(true);
+            userLesson = new UserLesson(user, lesson, true);
             userLessonRepository.save(userLesson);
             return true;
         }
-        return userLesson.isCompleted();
+        return false;
     }
 
     public boolean isLessonCompleted(Long userId, Long lessonId) {
-        UserLesson userLesson = userLessonRepository.findByUserIdAndLessonId(userId, lessonId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
+        Lesson lesson = lessonRepository.findById(lessonId).orElseThrow(() -> new IllegalArgumentException("Invalid lesson ID: " + lessonId));
+
+        UserLesson userLesson = userLessonRepository.findByUserAndLesson(user, lesson);
         return userLesson != null && userLesson.isCompleted();
+    }
+
+    public List<Long> getCompletedLessons(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
+        List<UserLesson> userLessons = userLessonRepository.findByUser(user);
+        return userLessons.stream()
+                .filter(UserLesson::isCompleted)
+                .map(userLesson -> userLesson.getLesson().getId())
+                .collect(Collectors.toList());
     }
 }
